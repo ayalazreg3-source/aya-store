@@ -36,19 +36,24 @@ model User {
 }
 
 model Product {
-  id          Int        @id @default(autoincrement())
-  name        String
-  description String?
-  price       Float
-  stock       Int        @default(0)
-  category    String
-  rating      Float      @default(0)
-  image       String?
-  createdAt   DateTime   @default(now())
-  updatedAt   DateTime   @updatedAt
+  id            Int         @id @default(autoincrement())
+  name          String
+  description   String?
+  price         Float
+  oldPrice      Float?
+  stock         Int         @default(100)
+  category      String
+  rating        Float       @default(0)
+  reviews       Int         @default(0)
+  image         String?
+  isBestSeller  Boolean     @default(false)
+  isNew         Boolean     @default(false)
+  isOffer       Boolean     @default(false)
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
 
-  wishlist    Wishlist[]
-  orderItems  OrderItem[]
+  wishlist      Wishlist[]
+  orderItems    OrderItem[]
 }
 
 model Wishlist {
