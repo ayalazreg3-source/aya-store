@@ -83,8 +83,8 @@ function Account() {
           onClick={() => setIsLogin(!isLogin)}
         >
           {isLogin
-            ? "ما عندكش حساب؟ إنشاء حساب"
-            : "عندك حساب؟ تسجيل الدخول"}
+            ? "ليس لديك حساب؟ إنشاء حساب"
+            : "لديك حساب؟ تسجيل الدخول"}
         </button>
 
         <div className="guest-checkout">

@@ -1,24 +1,55 @@
-import { useMemo, useState } from "react";
+
+import { useEffect, useMemo, useState } from "react";
 import ProductCard from "../components/ProductCard";
-import { products } from "../data/products";
+import { getProducts } from "../api";
 
 function Products({
   onAddToCart,
   wishlist,
   onToggleWishlist,
 }) {
+  const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("الكل");
   const [sort, setSort] = useState("default");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data = await getProducts();
+
+        setProducts(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error("Products error:", err);
+        setError("تعذر تحميل المنتجات حاليًا.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
 
   const filteredProducts = useMemo(() => {
     let result = products.filter((product) => {
       const searchText = search.trim().toLowerCase();
 
+      const name = product.name?.toLowerCase() || "";
+      const productCategory =
+        product.category?.toLowerCase() || "";
+      const description =
+        product.description?.toLowerCase() || "";
+
       const matchesSearch =
-        product.name.toLowerCase().includes(searchText) ||
-        product.category.toLowerCase().includes(searchText) ||
-        product.description.toLowerCase().includes(searchText);
+        !searchText ||
+        name.includes(searchText) ||
+        productCategory.includes(searchText) ||
+        description.includes(searchText);
 
       const matchesCategory =
         category === "الكل" ||
@@ -40,7 +71,7 @@ function Products({
     }
 
     return result;
-  }, [search, category, sort]);
+  }, [products, search, category, sort]);
 
   const clearFilters = () => {
     setSearch("");
@@ -50,7 +81,6 @@ function Products({
 
   return (
     <section className="page-section">
-
       <div className="page-header">
         <span>Aya Store</span>
 
@@ -64,7 +94,6 @@ function Products({
       </div>
 
       <div className="search-box">
-
         <span className="search-icon">
           🔍
         </span>
@@ -84,11 +113,9 @@ function Products({
             ✕
           </button>
         )}
-
       </div>
 
       <div className="filters">
-
         <select
           value={category}
           onChange={(e) =>
@@ -123,82 +150,107 @@ function Products({
           </option>
 
           <option value="low">
-            السعر: من الأقل للأعلى
+            السعر: من الأقل إلى الأعلى
           </option>
 
           <option value="high">
-            السعر: من الأعلى للأقل
+            السعر: من الأعلى إلى الأقل
           </option>
 
           <option value="rating">
             ⭐ الأعلى تقييمًا
           </option>
         </select>
-
       </div>
 
       <div className="products-result-header">
-
         <strong>
-          {filteredProducts.length} منتجات
+          {loading
+            ? "جاري تحميل المنتجات..."
+            : `${filteredProducts.length} منتجات`}
         </strong>
 
-        {(search ||
-          category !== "الكل" ||
-          sort !== "default") && (
-          <button
-            onClick={clearFilters}
-            className="reset-filters"
-          >
-            إعادة ضبط الفلاتر ↻
-          </button>
-        )}
-
-      </div>
-
-      <div className="products-grid">
-
-        {filteredProducts.length > 0 ? (
-
-          filteredProducts.map((product) => (
-            <ProductCard
-              key={product.id}
-              product={product}
-              onAddToCart={onAddToCart}
-              wishlist={wishlist}
-              onToggleWishlist={onToggleWishlist}
-            />
-          ))
-
-        ) : (
-
-          <div className="empty-result">
-
-            <span>🔎</span>
-
-            <h3>
-              ما لقيناش المنتج 😔
-            </h3>
-
-            <p>
-              جربي كلمة بحث أخرى أو أعيدي ضبط الفلاتر.
-            </p>
-
+        {!loading &&
+          (search ||
+            category !== "الكل" ||
+            sort !== "default") && (
             <button
               onClick={clearFilters}
-              className="primary-btn"
+              className="reset-filters"
             >
-              عرض كل المنتجات
+              إعادة ضبط الفلاتر ↻
             </button>
-
-          </div>
-
-        )}
-
+          )}
       </div>
 
+      {loading ? (
+        <div className="empty-result">
+          <span>⏳</span>
+
+          <h3>
+            جاري تحميل المنتجات...
+          </h3>
+
+          <p>
+            يرجى الانتظار قليلًا.
+          </p>
+        </div>
+      ) : error ? (
+        <div className="empty-result">
+          <span>⚠️</span>
+
+          <h3>
+            {error}
+          </h3>
+
+          <p>
+            تحقق من اتصال الإنترنت ثم حاول مرة أخرى.
+          </p>
+
+          <button
+            onClick={() => window.location.reload()}
+            className="primary-btn"
+          >
+            إعادة المحاولة ↻
+          </button>
+        </div>
+      ) : (
+        <div className="products-grid">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onAddToCart={onAddToCart}
+                wishlist={wishlist}
+                onToggleWishlist={onToggleWishlist}
+              />
+            ))
+          ) : (
+            <div className="empty-result">
+              <span>🔎</span>
+
+              <h3>
+                لا توجد منتجات حاليًا.
+              </h3>
+
+              <p>
+                جرّبي كلمة بحث أخرى أو أعيدي ضبط الفلاتر.
+              </p>
+
+              <button
+                onClick={clearFilters}
+                className="primary-btn"
+              >
+                عرض جميع المنتجات
+              </button>
+            </div>
+          )}
+        </div>
+      )}
     </section>
   );
 }
 
 export default Products;
+
