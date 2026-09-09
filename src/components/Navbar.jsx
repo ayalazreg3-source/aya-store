@@ -1,6 +1,7 @@
+
 import { NavLink } from "react-router-dom";
 
-function Navbar({ cartCount , wishlistCount  }) {
+function Navbar({ cartCount, wishlistCount }) {
   const links = [
     { name: "الرئيسية", path: "/" },
     { name: "الأكثر مبيعًا", path: "/bestsellers" },
@@ -25,9 +26,7 @@ function Navbar({ cartCount , wishlistCount  }) {
               key={link.path}
               to={link.path}
               className={({ isActive }) =>
-                isActive
-                  ? "nav-link active"
-                  : "nav-link"
+                isActive ? "nav-link active" : "nav-link"
               }
             >
               {link.name}
@@ -46,25 +45,19 @@ function Navbar({ cartCount , wishlistCount  }) {
           </NavLink>
 
           <NavLink
-            to="/account"
+            to="/wishlist"
             className="nav-icon"
-            title="حسابي"
+            title="المفضلة"
           >
-            👤
-          </NavLink>
-<NavLink
-  to="/wishlist"
-  className="nav-icon"
-  title="المفضلة"
->
-  ❤️
+            ❤️
 
-  {wishlistCount > 0 && (
-    <span className="cart-count">
-      {wishlistCount}
-    </span>
-  )}
-</NavLink>
+            {wishlistCount > 0 && (
+              <span className="cart-count">
+                {wishlistCount}
+              </span>
+            )}
+          </NavLink>
+
           <NavLink
             to="/cart"
             className="cart-icon"
@@ -80,10 +73,10 @@ function Navbar({ cartCount , wishlistCount  }) {
           </NavLink>
 
         </div>
-
       </div>
     </header>
   );
 }
 
 export default Navbar;
+

@@ -38,7 +38,7 @@ function Contact() {
         <span>Aya Store</span>
         <h1>تواصلي معنا 💌</h1>
         <p>
-          عندك سؤال أو استفسار؟ نحن هنا لمساعدتكِ.
+          لديك سؤال أو استفسار؟ نحن هنا لمساعدتكِ.
         </p>
       </div>
 
@@ -50,7 +50,7 @@ function Contact() {
             <div>📞</div>
             <div>
               <h3>الهاتف</h3>
-              <p>05 XX XX XX XX</p>
+              <p>07 80 23 80 31</p>
             </div>
           </div>
 
@@ -58,7 +58,8 @@ function Contact() {
             <div>📧</div>
             <div>
               <h3>البريد الإلكتروني</h3>
-              <p>contact@ayastore.dz</p>
+              <p>ayalazreg3@gmail.com
+              </p>
             </div>
           </div>
 

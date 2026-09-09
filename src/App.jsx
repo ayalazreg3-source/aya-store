@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -14,8 +15,8 @@ import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
-import Account from "./pages/Account";
 import Wishlist from "./pages/Wishlist";
+
 function App() {
   const [cart, setCart] = useState(() => {
     const savedCart = localStorage.getItem("aya-cart");
@@ -96,7 +97,10 @@ function App() {
     setCart((currentCart) =>
       currentCart.map((item) =>
         item.id === id
-          ? { ...item, quantity: item.quantity + 1 }
+          ? {
+              ...item,
+              quantity: item.quantity + 1,
+            }
           : item
       )
     );
@@ -132,10 +136,10 @@ function App() {
 
   return (
     <BrowserRouter>
-     <Navbar
-  cartCount={cartCount}
-  wishlistCount={wishlist.length}
-/>
+      <Navbar
+        cartCount={cartCount}
+        wishlistCount={wishlist.length}
+      />
 
       {toast && (
         <div className="toast">
@@ -145,7 +149,6 @@ function App() {
 
       <main>
         <Routes>
-
           <Route
             path="/"
             element={
@@ -245,19 +248,15 @@ function App() {
           />
 
           <Route
-            path="/account"
-            element={<Account />}
+            path="/wishlist"
+            element={
+              <Wishlist
+                wishlist={wishlist}
+                onAddToCart={addToCart}
+                onToggleWishlist={toggleWishlist}
+              />
+            }
           />
-          <Route
-  path="/wishlist"
-  element={
-    <Wishlist
-      wishlist={wishlist}
-      onAddToCart={addToCart}
-      onToggleWishlist={toggleWishlist}
-    />
-  }
-/>
         </Routes>
       </main>
 
@@ -267,3 +266,4 @@ function App() {
 }
 
 export default App;
+
